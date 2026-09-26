@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engeprestes — Terrenos</title>
+<style>
+  :root{
+    --graphite:#22302c;
+    --graphite-soft:#3a4d47;
+    --paper:#f6f4ee;
+    --line:#d8d3c4;
+    --brick:#a8532f;
+    --brick-dark:#8a4326;
+    --ok:#3d6b4f;
+    --text:#22302c;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: "Iowan Old Style","Georgia","Times New Roman",serif;
+    background:var(--paper);
+    color:var(--text);
+  }
+  header{
+    background:var(--graphite);
+    color:var(--paper);
+    padding:28px 32px 22px;
+  }
+  header h1{
+    margin:0;
+    font-size:1.6rem;
+    font-weight:600;
+    letter-spacing:.2px;
+  }
+  header p{
+    margin:6px 0 0;
+    color:#c9d3cd;
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-size:.92rem;
+  }
+  main{
+    max-width:980px;
+    margin:0 auto;
+    padding:28px 24px 60px;
+  }
+  .painel{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:22px 24px;
+    margin-bottom:26px;
+  }
+  .painel h2{
+    margin:0 0 16px;
+    font-size:1.05rem;
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-weight:600;
+    color:var(--graphite-soft);
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:2fr 1.3fr 1fr 1fr;
+    gap:14px 16px;
+  }
+  .campo{display:flex; flex-direction:column; gap:5px;}
+  .campo.span2{grid-column:span 2;}
+  label{
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-size:.76rem;
+    color:#6b756f;
+    text-transform:none;
+  }
+  input, select{
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-size:.92rem;
+    padding:9px 10px;
+    border:1px solid var(--line);
+    border-radius:4px;
+    background:#fdfcf9;
+    color:var(--text);
+  }
+  input:focus, select:focus{outline:2px solid var(--brick); outline-offset:1px;}
+  input:disabled{background:#eeece4; color:#7d857e; cursor:not-allowed;}
+  .nota-campo{
+    grid-column:1/-1;
+    margin:4px 0 0;
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-size:.78rem;
+    color:#8a9089;
+    font-style:italic;
+  }
+  .acoes{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+  }
+  button{
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-size:.88rem;
+    font-weight:600;
+    padding:10px 18px;
+    border-radius:4px;
+    border:none;
+    cursor:pointer;
+  }
+  #btn-salvar{background:var(--brick); color:#fff;}
+  #btn-salvar:hover{background:var(--brick-dark);}
+  #btn-cancelar{background:transparent; color:var(--graphite-soft); border:1px solid var(--line);}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    font-size:.87rem;
+  }
+  th{
+    text-align:left;
+    padding:9px 10px;
+    border-bottom:2px solid var(--graphite);
+    color:var(--graphite-soft);
+    font-weight:600;
+  }
+  td{
+    padding:10px 10px;
+    border-bottom:1px solid var(--line);
+    vertical-align:top;
+  }
+  tr:hover td{background:#faf8f2;}
+  .status-pill{
+    display:inline-block;
+    padding:2px 9px;
+    border-radius:99px;
+    font-size:.76rem;
+    font-weight:600;
+  }
+  .status-pagando{background:#fbe9de; color:var(--brick-dark);}
+  .status-liquidado{background:#dcece1; color:var(--ok);}
+  .link-acao{
+    background:none; border:none; padding:0; margin-right:12px;
+    font-size:.82rem; color:var(--graphite-soft); text-decoration:underline; cursor:pointer;
+  }
+  .link-acao.excluir{color:var(--brick);}
+  #vazio{
+    padding:20px; text-align:center; color:#8a9089;
+    font-family:-apple-system,"Segoe UI",sans-serif; font-size:.88rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Terrenos</h1>
+  <p>Cadastro e manutenção dos terrenos</p>
+</header>
+
+<main>
+
+  <div class="painel">
+    <h2 id="titulo-form">Novo terreno</h2>
+    <form id="form-terreno">
+      <input type="hidden" id="terreno-id">
+      <div class="grid">
+        <div class="campo span2">
+          <label for="local">Local</label>
+          <input id="local" required placeholder="Ex: Belo Campo II">
+        </div>
+        <div class="campo">
+          <label for="proprietario">Proprietário</label>
+          <input id="proprietario" placeholder="Ex: JC Beto Raul">
+        </div>
+        <div class="campo">
+          <label for="mt2">M²</label>
+          <input id="mt2" type="number" step="0.01">
+        </div>
+
+        <div class="campo">
+          <label for="data_aquisicao">Data de aquisição</label>
+          <input id="data_aquisicao" type="date">
+        </div>
+        <div class="campo">
+          <label for="custo_compra">Custo de compra</label>
+          <input id="custo_compra" disabled value="R$ 0,00">
+        </div>
+        <div class="campo">
+          <label for="outros_gastos">Outros gastos</label>
+          <input id="outros_gastos" disabled value="R$ 0,00">
+        </div>
+        <div class="campo">
+          <label for="status">Status</label>
+          <select id="status">
+            <option>Pagando</option>
+            <option>Liquidado</option>
+          </select>
+        </div>
+      </div>
+      <p class="nota-campo">Custo de compra e outros gastos são preenchidos automaticamente a partir dos lançamentos em Contas a Pagar (módulo futuro) — não são editáveis aqui.</p>
+      <div class="acoes">
+        <button type="submit" id="btn-salvar">Salvar terreno</button>
+        <button type="button" id="btn-cancelar" style="display:none;">Cancelar edição</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="painel">
+    <h2>Terrenos cadastrados</h2>
+    <input type="text" id="busca" placeholder="Pesquisar por nome do terreno..." style="width:100%; margin-bottom:14px;">
+    <table>
+      <thead>
+        <tr>
+          <th>Local</th>
+          <th>Proprietário</th>
+          <th>M²</th>
+          <th>Custo total</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="corpo-tabela"></tbody>
+    </table>
+    <div id="vazio" style="display:none;">Nenhum terreno cadastrado ainda.</div>
+  </div>
+
+</main>
+
+<script>
+// Em produção (Render, etc.) o front-end é servido pelo mesmo endereço da
+// API, então usamos a própria origem da página em vez de um endereço fixo.
+// Isso funciona tanto local (127.0.0.1:8000) quanto publicado na internet.
+const API = window.location.origin;
+
+const form = document.getElementById("form-terreno");
+const corpoTabela = document.getElementById("corpo-tabela");
+const vazio = document.getElementById("vazio");
+const btnCancelar = document.getElementById("btn-cancelar");
+const tituloForm = document.getElementById("titulo-form");
+const campoBusca = document.getElementById("busca");
+
+let todosTerrenos = [];  // guarda a lista completa para filtrar sem recarregar da API
+
+function moeda(valor){
+  return (valor || 0).toLocaleString("pt-BR", {style:"currency", currency:"BRL"});
+}
+
+async function carregarTerrenos(){
+  const resp = await fetch(`${API}/terrenos`);
+  todosTerrenos = await resp.json();
+  renderizarTabela(todosTerrenos);
+}
+
+function renderizarTabela(terrenos){
+  corpoTabela.innerHTML = "";
+  vazio.style.display = terrenos.length ? "none" : "block";
+
+  terrenos.forEach(t => {
+    const tr = document.createElement("tr");
+    const classeStatus = t.status === "Liquidado" ? "status-liquidado" : "status-pagando";
+    tr.innerHTML = `
+      <td>${t.local}</td>
+      <td>${t.proprietario || "—"}</td>
+      <td>${t.mt2 ?? "—"}</td>
+      <td>${moeda(t.custo_total)}</td>
+      <td><span class="status-pill ${classeStatus}">${t.status}</span></td>
+      <td>
+        <button class="link-acao" onclick="editar(${t.id})">Editar</button>
+        <button class="link-acao excluir" onclick="excluir(${t.id})">Excluir</button>
+      </td>
+    `;
+    corpoTabela.appendChild(tr);
+  });
+}
+
+campoBusca.addEventListener("input", () => {
+  const termo = campoBusca.value.trim().toLowerCase();
+  const filtrados = termo
+    ? todosTerrenos.filter(t => t.local.toLowerCase().includes(termo))
+    : todosTerrenos;
+
+  vazio.textContent = termo
+    ? "Nenhum terreno encontrado para essa pesquisa."
+    : "Nenhum terreno cadastrado ainda.";
+
+  renderizarTabela(filtrados);
+});
+
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+
+  const id = document.getElementById("terreno-id").value;
+  const dados = {
+    local: document.getElementById("local").value,
+    proprietario: document.getElementById("proprietario").value || null,
+    mt2: parseFloat(document.getElementById("mt2").value) || null,
+    data_aquisicao: document.getElementById("data_aquisicao").value || null,
+    status: document.getElementById("status").value,
+    // custo_compra e outros_gastos não são enviados por aqui de propósito:
+    // continuarão como estão até o módulo de Contas a Pagar assumir esse valor.
+  };
+
+  const url = id ? `${API}/terrenos/${id}` : `${API}/terrenos`;
+  const metodo = id ? "PUT" : "POST";
+
+  await fetch(url, {
+    method: metodo,
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(dados),
+  });
+
+  resetarFormulario();
+  carregarTerrenos();
+});
+
+async function editar(id){
+  const resp = await fetch(`${API}/terrenos/${id}`);
+  const t = await resp.json();
+
+  document.getElementById("terreno-id").value = t.id;
+  document.getElementById("local").value = t.local;
+  document.getElementById("proprietario").value = t.proprietario || "";
+  document.getElementById("mt2").value = t.mt2 || "";
+  document.getElementById("data_aquisicao").value = t.data_aquisicao || "";
+  document.getElementById("custo_compra").value = moeda(t.custo_compra);
+  document.getElementById("outros_gastos").value = moeda(t.outros_gastos);
+  document.getElementById("status").value = t.status;
+
+  tituloForm.textContent = `Editando: ${t.local}`;
+  btnCancelar.style.display = "inline-block";
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+async function excluir(id){
+  if(!confirm("Excluir este terreno? Essa ação não pode ser desfeita.")) return;
+  await fetch(`${API}/terrenos/${id}`, {method:"DELETE"});
+  carregarTerrenos();
+}
+
+function resetarFormulario(){
+  form.reset();
+  document.getElementById("terreno-id").value = "";
+  tituloForm.textContent = "Novo terreno";
+  btnCancelar.style.display = "none";
+}
+
+btnCancelar.addEventListener("click", resetarFormulario);
+
+carregarTerrenos();
+</script>
+
+</body>
+</html>
